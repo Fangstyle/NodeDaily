@@ -6,7 +6,7 @@ const readline = require('readline');
 const rl = readline.createInterface(process.stdin, process.stdout);
 
 rl.question('What is your name? ', (name) => {
-    name = name.trim();
+    var name = name.trim();
 if (!name) {
     throw new Error('没名字还出来混。。');
 }
@@ -27,12 +27,11 @@ switch (type) {
         console.log('\nboardcast[' + signal.from + ']> ' + signal.message + '\n');
         rl.prompt();
         break;
-    case 'privat':
-        if(name.equal(signal.to)){
+    case 'private':
+        if(name==signal.to){
             console.log('\nprivate[' + signal.from + ']> ' + signal.message + '\n');
         }
     default:
-        client.write('弄啥咧！你要干的我干不了');
         break;
 }
 } catch (error) {
@@ -46,13 +45,28 @@ rl.prompt(); // 写入控制台
 
 // 输入一行内容敲回车
 rl.on('line', (line) => {
-
+    let send = {};
     // {"procotol":"boardcast","from":"张三","message":"弄啥咧！"}
-    var send = {
-        type: 'boardcast',
-        from: name,
-        message: line.toString().trim()
-    };
+    if(line.toString().split(' ').length>1){
+        var tempArray = line.split(' ');
+        let message = '';
+        for(let i=1;i<tempArray.length;i++){
+            message+=tempArray[i].toString();
+        }
+        send = {
+            type: 'private',
+            from: name,
+            to:tempArray[0].toString(),
+            message: message
+        };
+        console.log("private");
+    }else{
+        send = {
+            type: 'boardcast',
+            from: name,
+            message: line.toString().trim()
+        };
+    }
 client.write(JSON.stringify(send));
 
 rl.prompt();

@@ -23,8 +23,8 @@ function swtichChatStyle(data){
         case "boardcast":
             broadcastToClient(data);
             break;
-        case "privat":
-            sendToFriend(data);
+        case "private":
+            sendToFrind(data);
             break;
         default:
             break;
@@ -34,7 +34,7 @@ function login(data) {
     clients[data.from] = socket;
     console.log(`Welcome ${data.from} to 8124 chatroom 当前在线${Object.keys(clients).length}`);
 }
-function sendToFriend(signal) {
+function sendToFrind(signal) {
     var username = signal.from;
     var message = signal.message;
     var sendTo = signal.to;
