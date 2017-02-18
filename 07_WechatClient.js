@@ -27,6 +27,10 @@ switch (type) {
         console.log('\nboardcast[' + signal.from + ']> ' + signal.message + '\n');
         rl.prompt();
         break;
+    case 'privat':
+        if(name.equal(signal.to)){
+            console.log('\nprivate[' + signal.from + ']> ' + signal.message + '\n');
+        }
     default:
         client.write('弄啥咧！你要干的我干不了');
         break;

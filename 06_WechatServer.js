@@ -24,6 +24,7 @@ function swtichChatStyle(data){
             broadcastToClient(data);
             break;
         case "privat":
+            sendToFriend(data);
             break;
         default:
             break;
@@ -33,11 +34,29 @@ function login(data) {
     clients[data.from] = socket;
     console.log(`Welcome ${data.from} to 8124 chatroom 当前在线${Object.keys(clients).length}`);
 }
+function sendToFriend(signal) {
+    var username = signal.from;
+    var message = signal.message;
+    var sendTo = signal.to;
+    var send = {
+        type: signal.type,
+        to:sendTo,
+        from: username,
+        message: message
+    };
+    for(var item in clients){
+        if (clients.hasOwnProperty(item) &&clients.hasOwnProperty(signal.to)) { //filter,只输出man的私有属性
+            clients[item].write(JSON.stringify(send));
+            //console.log(clients[item]);
+        };
+    }
+}
 function broadcastToClient(signal) {
     // console.log(signal);
     // 肯定有用户名和消息
     var username = signal.from;
     var message = signal.message;
+    var sendTo = signal.to;
     // 我们要发给客户端的东西
     var send = {
         type: signal.type,
